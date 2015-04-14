@@ -1,5 +1,5 @@
 # Sentinel-1 integrity check
-Check the MD5 checksum of Sentinel-1 products
+Check the MD5 checksum of Sentinel-1 products downlodeable from https://scihub.esa.int/dhus/
 
 ### dependencies
 - Python 2.7
