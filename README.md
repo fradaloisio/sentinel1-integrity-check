@@ -2,7 +2,7 @@
 Check the MD5 checksum of Sentinel-1 products downlodeable from https://scihub.esa.int/dhus/
 
 ### dependencies
-- Python 2.7
+- Python >= 2.6
 - libxml2
 
 ### usage
