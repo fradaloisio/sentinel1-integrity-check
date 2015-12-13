@@ -11,7 +11,7 @@ verbose = False
 error = False
 filesQ = Queue()
 
-num_threads = 4
+num_threads = 2
 
 try:
     if str(sys.argv[1]) == "-v":
@@ -35,25 +35,24 @@ def report(message):
 def checkMD5(q):
     global error
     while error != True:
-        full_path = q.get()
-        print(full_path)
+        file = q.get()
+        #print(file)
+
+        full_path =file['filename']
+        filename_checksum = file['checksum']
+
         if not os.path.isfile(full_path):
             report( "[ERROR] " + full_path + " NOT EXIST" )
             error = True
             print "False"
-            exit()
         else:
             checksum = hashlib.md5(open(full_path, 'rb').read()).hexdigest()
-
-            print(checksum)
-            print(filename_checksum)
 
             if checksum != filename_checksum:
                 report( "[ERROR]" + full_path + " NOT VALID" )
                 error = True
                 print "False"
-                exit()
-            q.task_done()
+        q.task_done()
 
 
 if not os.path.isdir(product):
@@ -92,7 +91,12 @@ try:
         filename_checksum = str(manifest.xpathEval('byteStream/checksum')[0].content)
         full_path = product+filename[1:]
 
-        filesQ.put(full_path)
+        prod = {}
+        prod['filename'] = full_path
+        prod['checksum'] = filename_checksum
+
+        filesQ.put(prod)
+        #print("push %s" %(full_path,))
 
     if error:
         report( "[ERROR] " + product + " NOT OK" )
