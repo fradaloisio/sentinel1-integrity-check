@@ -11,7 +11,7 @@ verbose = False
 error = False
 filesQ = Queue()
 
-num_threads = 2
+num_threads = 10
 
 try:
     if str(sys.argv[1]) == "-v":
@@ -74,6 +74,8 @@ for i in range(num_threads):
 
 
 try:
+    start_time = time.time()
+
     doc = libxml2.parseFile(product + "/manifest.safe")
 
     manifest = doc.xpathNewContext()
@@ -97,6 +99,9 @@ try:
 
         filesQ.put(prod)
         #print("push %s" %(full_path,))
+    filesQ.join()
+    elapsed_time = time.time() - start_time
+    report("done in "+str(elapsed_time))
 
     if error:
         report( "[ERROR] " + product + " NOT OK" )
@@ -106,8 +111,6 @@ try:
         report( product + " OK" )
         print "True"
         exit()
-
-    filesQ.join()
 
 except libxml2.parserError:
     report("manifest not valid ... ")
